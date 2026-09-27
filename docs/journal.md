@@ -140,3 +140,30 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
   `~/.config/pipewire/pipewire.conf.d/` so it survives a restart.
 - Still to check by ear tomorrow: stereo, distortion at full phone volume (whether the resistor
   divider is needed now), dropouts.
+
+## 2026-09-28 (night) — sound quality from every sender
+
+- Owner's brief before bed: run the tests, the documentation and the diagrams; sound quality
+  is priority one, from macOS, Linux and Windows alike. Device renamed `Air-Sound`
+  (RDS `AirSound`); the station name is just a default, the portal changes it.
+- Fedora streamed with "digital distortion, unlistenable" while the iPhone sounded fine. Measured
+  rather than guessed: a jump detector on the decoded PCM found a discontinuity in the last
+  4–5 frames of *every* packet, and only there. The RTP receive buffer was 1408 bytes including
+  the 12-byte RTP header; PipeWire sends uncompressed ALAC (352 frames = 1424 bytes on the wire),
+  so the tail of each packet was cut and the decoder read garbage. iPhones compress, their
+  packets are shorter, hence "decent". Buffer 2048 bytes: zero jumps over a full run.
+- Second finding: the RTP layer handed frames to the output ring only an eighth of the latency
+  before they were due; with a sender that transmits close to real time the ring hovered at
+  40 ms and dipped under a chunk. Hand-off is now half the latency ahead and a new stream
+  waits for 100 ms in the ring before it starts: underruns 0.
+- Third, the owner's requirement: when nothing plays, any device must be able to take the
+  radio. One sender (PipeWire) kept its RTSP session open with silence and the receiver's
+  single-connection loop left the iPhone waiting until it gave up ("Unable to connect"). A
+  second client now takes over a session that has carried no sound for five seconds; verified
+  with a silent stream from Fedora and a knock on port 5000.
+- Also found: the earlier "Unable to connect" reports coincided with my log captures, which
+  reset the board on opening the port. The port is now held open by one long-lived monitor.
+- Headroom: 14 dB of trim put digital full scale exactly at the transmitter's 0 dBfs and
+  pre-emphasised peaks into its limiter (OVERMOD in the log). Trim 18 dB; the resistor divider
+  in the aux path will give this headroom back to the DAC.
+- Released 0.2.0 with the first signed image.

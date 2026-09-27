@@ -2,7 +2,7 @@
 
 All notable changes to this project are recorded here. Versions are firmware versions.
 
-## [Unreleased]
+## [0.2.0] — 2026-09-28
 
 ### Added
 - AirPlay (RAOP) receiver: the station appears as an audio output on iOS, macOS and PipeWire;
@@ -13,6 +13,15 @@ All notable changes to this project are recorded here. Versions are firmware ver
 - LED in the bastion language (green flash every 30 s on air, violet every 10 s while streaming),
   BOOT button; boot counter and reset reason in the journal.
 - Two 6 MB OTA slots; Wi-Fi power save off while connected.
+- `docs/senders.md`: iOS, macOS, Linux (PipeWire), Windows.
+
+### Fixed
+- Uncompressed ALAC packets (PipeWire) were truncated by a 1408-byte receive buffer: torn tail
+  on every packet. Buffer 2048 bytes.
+- Output ring ran dry with real-time senders: frames handed over half the latency ahead, 100 ms
+  prefill at stream start.
+- A silent sender no longer blocks other devices: a session with no sound for 5 s yields.
+- Output trim 18 dB (was 14): headroom under the transmitter's limiter.
 
 ## [0.1.0] — 2026-09-27
 

@@ -15,3 +15,7 @@ marked, so the path is visible.
 | 2026-09-27 | Modules are powered from the devkit's `3V3` pin, not `5Vin`; the `IN-OUT` pads stay open. | `5Vin` is input-only on this devkit. 3.3 V is within both modules' range and puts the Si4713 module's I2C pull-ups at ESP32 logic level. |
 | 2026-09-28 | AirPlay comes from squeezelite-esp32's RAOP component (MIT) plus Apple's ALAC decoder (Apache 2.0); the repository stays MIT, third-party parts listed in NOTICE. | Owner: reuse what works. The component's only GPL file was its log header, replaced. |
 | 2026-09-28 | Setup, button and LED behaviour follow esp32-s3-n16r8-bastion; the ESP-IDF implementation comes from smartest-home's components. | Owner's choice; both are the owner's projects. |
+| 2026-09-28 | A second AirPlay client takes over a session that has produced no sound for 5 s. | Owner: when nothing plays, any device on the network may play. PipeWire keeps silent sessions open; the stock receiver would block everyone else. |
+| 2026-09-28 | RTP packets up to 2048 bytes; frames handed to the output ring half the latency ahead; 100 ms prefill. | Uncompressed ALAC from PipeWire is 1424 bytes a packet and arrives close to real time; measured zero jumps and zero underruns after the change. |
+| 2026-09-28 | Digital trim 18 dB until the resistor divider exists. | 4 dB of headroom under the Si4713 limiter with pre-emphasis; the divider will move this attenuation into the analog domain. |
+| 2026-09-28 | Default station name `Air-Sound`, RDS `AirSound`. | Owner's choice; the earlier name was an example. |

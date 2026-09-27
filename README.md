@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-  <a href="CHANGELOG.md"><img alt="Version" src="https://img.shields.io/badge/firmware-v0.1.0-2ea44f.svg"></a>
+  <a href="CHANGELOG.md"><img alt="Version" src="https://img.shields.io/badge/firmware-v0.2.0-2ea44f.svg"></a>
   <a href=".github/workflows/privacy.yml"><img alt="Privacy scan" src="https://img.shields.io/github/actions/workflow/status/DMYTROSKORIN/esp32-air-sound/privacy.yml?branch=main&label=privacy%20scan"></a>
   <img alt="MCU" src="https://img.shields.io/badge/mcu-ESP32-e7352c.svg">
   <img alt="Status" src="https://img.shields.io/badge/status-R%26D-orange.svg">
@@ -17,10 +17,11 @@
 > Early R&D. Nothing here is a product yet. Expect the hardware list, the architecture and
 > the firmware to change as the bench answers questions.
 
-Where it stands: the bench transmits and streams. The board finds the Si4713, goes on air at
-76.50 MHz with RDS, and shows up as an AirPlay output; the first stream (from Fedora, over
-PipeWire) reached the transmitter's input on 2026-09-28. iOS and macOS are next to be tried
-(`docs/roadmap.md`, step 2).
+Where it stands (firmware 0.2.0): the board finds the Si4713, goes on air at 76.50 MHz with
+RDS, and is an AirPlay output called `Air-Sound`. An iPhone and a Fedora laptop have played
+through it with the track title on the radio's display; the stream is measured clean (no
+dropped or torn packets, no buffer underruns). How to send from each system: `docs/senders.md`.
+Next: the smartest-home remote over MQTT (`docs/roadmap.md`, step 3).
 
 ## What is this?
 
@@ -40,6 +41,7 @@ bench work is done.
 - `docs/hardware.md` — the boards on the bench, what each one is, and the ESP32 pins that are off-limits.
 - `docs/wiring.md` — how to connect them, step by step, with the checks that matter.
 - `docs/roadmap.md` — the whole picture, the protocol choice, and the steps to get there.
+- `docs/senders.md` — how to play to it from iOS, macOS, Linux and Windows, and the rules for several senders.
 - `tools/check-private.sh` — the privacy scan that runs locally and in CI.
 - `CLAUDE.md` — working rules for the repository, including what must never be committed.
 
