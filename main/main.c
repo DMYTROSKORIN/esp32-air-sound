@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include "board.h"
 #include "sdkconfig.h"
+#ifndef CONFIG_AIRSOUND_TONE_ENABLE
+#define CONFIG_AIRSOUND_TONE_ENABLE 0
+#endif
 #include "si4713.h"
 #include "tone.h"
 
@@ -166,7 +169,8 @@ void app_main(void)
     // --- Test tone to the DAC (runs even without the transmitter, so the DAC can be
     //     checked on headphones) --------------------------------------------------------
     ESP_ERROR_CHECK(tone_start(PIN_I2S_BCK, PIN_I2S_LRCK, PIN_I2S_DOUT,
-                               CONFIG_AIRSOUND_TONE_HZ, CONFIG_AIRSOUND_TONE_DB));
+                               CONFIG_AIRSOUND_TONE_HZ, CONFIG_AIRSOUND_TONE_DB,
+                               CONFIG_AIRSOUND_TONE_ENABLE));
 
     // --- Report -----------------------------------------------------------------------
     for (;;) {

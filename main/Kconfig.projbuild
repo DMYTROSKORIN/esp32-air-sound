@@ -23,11 +23,15 @@ menu "esp32-air-sound"
 
     config AIRSOUND_RDS_PS
         string "RDS programme service name (8 characters)"
-        default "AIRSOUND"
+        default "Air-Sound"
 
     config AIRSOUND_RDS_RT
         string "RDS radiotext (up to 64 characters)"
-        default "esp32-air-sound  test tone 1 kHz"
+        default "Air-Sound - esp32-air-sound"
+
+    config AIRSOUND_TONE_ENABLE
+        bool "Send the test tone (off = silence on the I2S output)"
+        default n
 
     config AIRSOUND_TONE_HZ
         int "Test tone frequency, Hz"
