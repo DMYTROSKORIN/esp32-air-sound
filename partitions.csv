@@ -1,0 +1,9 @@
+# 16 MB flash: two 6 MB OTA slots so a signed update always has a slot to land in and a
+# slot to fall back to, and the rest kept for later (album art cache, logs).
+# Name,     Type, SubType,  Offset,   Size,     Flags
+nvs,        data, nvs,      0x9000,   0x6000,
+otadata,    data, ota,      0xf000,   0x2000,
+phy_init,   data, phy,      0x11000,  0x1000,
+ota_0,      app,  ota_0,    0x20000,  0x600000,
+ota_1,      app,  ota_1,    0x620000, 0x600000,
+storage,    data, spiffs,   0xc20000, 0x3e0000,

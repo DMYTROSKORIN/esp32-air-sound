@@ -1,49 +1,23 @@
 menu "esp32-air-sound"
 
-    config AIRSOUND_FREQ_10KHZ
-        int "FM frequency, in 10 kHz units (10000 = 100.00 MHz)"
-        range 7600 10800
-        default 7650
-        help
-            Pick a frequency with nothing on it. 76.00 to 108.00 MHz in 50 kHz steps,
-            so the value must be a multiple of 5.
-
-    config AIRSOUND_TX_POWER_DBUV
-        int "Transmit power, dBuV (88..115)"
-        range 88 115
-        default 105
-
-    config AIRSOUND_PREEMPHASIS_50US
-        bool "50 us pre-emphasis (Europe); off = 75 us (Americas)"
-        default y
-
-    config AIRSOUND_RDS_PI
-        hex "RDS programme identification code"
-        default 0xADAF
-
-    config AIRSOUND_RDS_PS
-        string "RDS programme service name (8 characters)"
-        default "Air-Sound"
-
-    config AIRSOUND_RDS_RT
-        string "RDS radiotext (up to 64 characters)"
-        default "Air-Sound - esp32-air-sound"
-
     config AIRSOUND_TONE_ENABLE
-        bool "Send the test tone (off = silence on the I2S output)"
+        bool "Send a test tone instead of silence when nothing streams"
         default n
-
-    config AIRSOUND_TONE_HZ
-        int "Test tone frequency, Hz"
-        range 100 10000
-        default 1000
+        help
+            Bench aid: a 1 kHz tone gated 0.5 s on / 0.5 s off. Off in normal use.
 
     config AIRSOUND_TONE_DB
-        int "Test tone level, dB below full scale (positive number)"
+        int "Test tone level, dB below full scale"
         range 0 60
         default 20
+
+    config AIRSOUND_LINE_TRIM_DB
+        int "Output trim, dB below full scale, applied to everything"
+        range 0 40
+        default 14
         help
-            The PCM5102 puts out 2.1 Vrms at full scale, the Si4713 line input clips at
-            636 mVpk. 14 dB down keeps the transmitter's limiter out of the picture.
+            The PCM5102 puts out 2.1 Vrms at full scale, the Si4713 line input clips at 636 mVpk.
+            Until a resistor divider sits in the aux path this digital trim keeps the transmitter
+            out of its limiter. The trim is applied in 32-bit arithmetic on the way to the DAC.
 
 endmenu

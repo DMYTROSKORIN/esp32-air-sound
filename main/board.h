@@ -11,3 +11,6 @@
 
 #define SI4713_ADDR_CS_HIGH 0x63   // CS open (module pull-up)
 #define SI4713_ADDR_CS_LOW  0x11   // CS tied to GND
+
+#define PIN_LED          48   // WS2812 on the devkit
+#define PIN_BUTTON        0   // BOOT
