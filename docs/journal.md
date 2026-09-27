@@ -37,3 +37,8 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
 - Protocol: AirPlay/RAOP, reasons in `roadmap.md`. Steps 0–5 there.
 - `wiring.md`: the first assembly, USB-powered, 14 jumpers, one aux cable, one solder joint
   (antenna), with the two meter checks that decide whether it makes a sound.
+- Owner confirmed: soldering iron, aux cable and antenna wire at hand; USB-C power for the
+  whole first stage, standalone 5 V later; AirPlay accepted with Linux support required
+  (PipeWire RAOP sink covers it). Bench diagram published as a private Artifact page for the
+  owner; `wiring.md` corrected to match it (module headers in column `f`, wires in `g–j`,
+  3V3 left unconnected until the microphone, whip antenna moved off the board).

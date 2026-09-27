@@ -9,7 +9,7 @@ antenna.
 
 - ESP32-S3-N16R8 devkit, already on the two breadboards.
 - GY-PCM5102 DAC and CJMCU-4713 (Si4713) with their headers, both plug into a breadboard.
-- Male-to-male Dupont jumper wires: 14 for the signals and power, a few spare.
+- Male-to-male Dupont jumper wires: 13 for the signals and power, a few spare.
 - One 3.5 mm stereo male-to-male audio cable (aux cable). This is the DAC → transmitter link.
 - About 75 cm of insulated solid or stranded wire for the antenna, soldered into the `Ant` hole.
 - A multimeter. Two checks below are not optional.
@@ -33,7 +33,7 @@ red 5 V, black GND, orange 3V3, yellow SCL, green SDA, white RST, blue/purple/gr
         │                         GPIO9├─── SCL ──┼─┐ │              │ SCK ◀── GND (!)
         │                         GPIO8├─── SDA ──┼─┼▶│  3.5 mm jack │──┐
         │                         GPIO4├─── RST ──┼─┼┐└──────────────┘  │ aux cable
-        │                           3V3├──────────┼─┼┼───────────────────┼─▶ 3V3 rail (unused in MVP)
+        │                           3V3├  (unused until the microphone, step 4)
         └──────────────────────────────┘          │ ││ ┌──────────────┐  │
                                                   │ │└▶│ RST          │  │
                                                   │ └─▶│ SCL  CJMCU-  │  │
@@ -67,7 +67,6 @@ powered over USB, so it feeds the two modules.
 | 11 | `GPIO9` | Si4713 `SCL` | yellow | I2C clock; module has 10 kΩ pull-ups |
 | 12 | `GPIO8` | Si4713 `SDA` | green | I2C data |
 | 13 | `GPIO4` | Si4713 `RST` | white | firmware pulses it low at start; chip is dead until then |
-| 14 | `3V3` (bottom right) | second `+` rail on the right breadboard | orange | not needed in the MVP, ready for the microphone; keep it on its own rail, never on the 5 V rail |
 | — | PCM5102 jack | Si4713 jack | aux cable | line-level audio, stereo |
 | — | Si4713 `Ant` hole | ~75 cm wire | solder | quarter wave near 100 MHz; hang it vertically |
 
@@ -77,15 +76,17 @@ want `0x11`), `GP1`, `GP2`, `3Vo`, `LIN`, `RIN` (the jack is in parallel with th
 
 ## Where to put the modules on the breadboard
 
-The devkit occupies column `a` on the right breadboard and column `e` on the left one, so
+The devkit occupies column `a` on the right breadboard and column `j` on the left one, so
 columns `b–e` on the right are free next to every devkit pin, and the `f–j` half of the right
-breadboard is completely free. Put both modules there, headers in column `j`, one pin per
-row, so each pin has holes `f–i` for wires:
+breadboard is completely free. Put both modules there, headers in column `f`, one pin per
+row, bodies lying to the left over the centre gap, so each pin has holes `g–j` for wires and
+the power rails on the right edge stay reachable:
 
-- Si4713, 11 pins: rows **30–40**, column `j`. Row 30 = `RST` … row 40 = `RIN`. The jack
-  points outward, the antenna wire has room.
-- PCM5102, 6 pins: rows **45–50**, column `j`. Row 45 = `SCK` … row 50 = `VIN`. The jack
-  points outward, toward the Si4713 jack, so the aux cable is short.
+- Si4713, 11 pins: rows **30–40**, column `f`. Row 30 = `RST` … row 40 = `RIN`.
+- PCM5102, 6 pins: rows **45–50**, column `f`. Row 45 = `SCK` … row 50 = `VIN`.
+
+Move the devkit's Wi-Fi whip antenna off the breadboard first: it lies exactly where the
+module bodies go.
 
 A single-row header always goes *along* the row numbers (each pin in its own numbered row),
 never along one row: the five holes of one row are shorted together.
@@ -101,7 +102,8 @@ bridge each rail with a short jumper.
 3. Wires 1–2 (rails), then 3–5 (DAC power and SCK), then 9–10 (Si4713 power).
 4. Meter, continuity mode: `+` rail to `−` rail must **not** beep. If it beeps, find the short
    before going on; a module in the wrong rows is the usual cause.
-5. Signal wires 6–8 and 11–13. Wire 14 last.
+5. Signal wires 6–8 and 11–13. The devkit's `3V3` stays unconnected until the microphone
+   arrives (step 4); it then gets the left breadboard's rail, never the 5 V one.
 6. Turn the DAC over and confirm the four jumpers with the meter (continuity from the middle
    pad to the `H` or `L` pad): expected `H1L=L`, `H2L=L`, `H3L=H`, `H4L=L`. `H3L` on `L` means
    the DAC is muted in hardware and no firmware will fix it; it takes a solder blob to move it.
