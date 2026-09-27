@@ -259,5 +259,19 @@ esp_err_t si4713_rds_set_radiotext(si4713_t *tx, const char *text)
         uint8_t resp[6];
         ESP_RETURN_ON_ERROR(command(tx, cmd, sizeof cmd, resp, sizeof resp), TAG, "rds buff");
     }
-    return ESP_OK;
+    // Re-assert pilot + stereo + RDS now that the buffers hold something; the reference
+    // sequence enables the RDS component after the buffers are set up, not before.
+    return si4713_set_property(tx, PROP_TX_COMPONENT_ENABLE, 0x0007);
+}
+
+esp_err_t si4713_rds_status(si4713_t *tx, si4713_rds_status_t *st)
+{
+    uint8_t cmd[8] = { CMD_TX_RDS_BUFF, 0x00, 0, 0, 0, 0, 0, 0 };   // no load, no clear
+    uint8_t r[6];
+    ESP_RETURN_ON_ERROR(command(tx, cmd, sizeof cmd, r, sizeof r), TAG, "rds status");
+    st->ps_xmit   = r[1] & 0x10;
+    st->cbuf_xmit = r[1] & 0x08;
+    st->fifo_xmit = r[1] & 0x04;
+    st->cbuf_used = r[3];
+    return si4713_get_property(tx, PROP_TX_COMPONENT_ENABLE, &st->component_enable);
 }

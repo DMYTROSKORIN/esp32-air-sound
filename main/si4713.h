@@ -55,3 +55,14 @@ esp_err_t si4713_asq_status(si4713_t *tx, si4713_asq_t *asq);
 esp_err_t si4713_rds_begin(si4713_t *tx, uint16_t pi);
 esp_err_t si4713_rds_set_ps(si4713_t *tx, const char *ps8);
 esp_err_t si4713_rds_set_radiotext(si4713_t *tx, const char *text);
+
+typedef struct {
+    bool ps_xmit;        // PS groups are going out
+    bool cbuf_xmit;      // circular buffer (radiotext) groups are going out
+    bool fifo_xmit;
+    uint8_t cbuf_used;   // groups loaded in the circular buffer
+    uint16_t component_enable;   // read back: bit0 pilot, bit1 stereo, bit2 RDS
+} si4713_rds_status_t;
+
+// Reads what the RDS engine is actually doing. Cheap; safe to call every few seconds.
+esp_err_t si4713_rds_status(si4713_t *tx, si4713_rds_status_t *st);

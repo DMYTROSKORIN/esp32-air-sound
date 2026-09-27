@@ -98,3 +98,8 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
   input at 190 mV). Restored to line input 3 (636 mVpk) and tone −20 dBFS: −12 dBfs, clean.
 - Step 1 is done: I2C finds the chip, DAC plays, transmitter carries it with RDS loaded.
   Not yet seen: `AIRSOUND` on the receiver display, which needs the antenna wire.
+- RDS confirmed on the receiver (an XHDATA D-808, Si4735-based): with a wire on `Ant`
+  touching the receiver's whip it showed `Stereo`, 59 dBµ, SNR 36 dB, and `AIRSOUND` once its
+  RDS page was selected. On that radio `DISPLAY` cycles the top-right corner only; the RDS
+  pages (PS, PTY, radiotext, date) are on `INFO`. The chip's own counters agree: components
+  0x0007, PS and radiotext groups transmitting. Step 1 done end to end.

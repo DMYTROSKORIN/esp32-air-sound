@@ -146,6 +146,13 @@ void app_main(void)
         ESP_ERROR_CHECK(si4713_rds_set_ps(&fm, CONFIG_AIRSOUND_RDS_PS));
         ESP_ERROR_CHECK(si4713_rds_set_radiotext(&fm, CONFIG_AIRSOUND_RDS_RT));
 
+        si4713_rds_status_t rs;
+        if (si4713_rds_status(&fm, &rs) == ESP_OK)
+            ESP_LOGI(TAG, "rds: components 0x%04X (pilot%s stereo%s rds%s), PS xmit %d, RT groups %u xmit %d",
+                     rs.component_enable, (rs.component_enable & 1) ? "+" : "-",
+                     (rs.component_enable & 2) ? "+" : "-", (rs.component_enable & 4) ? "+" : "-",
+                     rs.ps_xmit, rs.cbuf_used, rs.cbuf_xmit);
+
         si4713_tune_status_t st;
         if (si4713_tune_status(&fm, &st) == ESP_OK) {
             ESP_LOGI(TAG, "on air: %u.%02u MHz, %u dBuV, antenna cap %u (%.2f pF), noise %u dBuV, RDS PS \"%s\"",
@@ -167,12 +174,12 @@ void app_main(void)
         if (!fm_ok) continue;
         si4713_asq_t asq;
         si4713_tune_status_t st;
-        if (si4713_asq_status(&fm, &asq) == ESP_OK && si4713_tune_status(&fm, &st) == ESP_OK) {
-            ESP_LOGI(TAG, "tx %u.%02u MHz %u dBuV cap %u | audio in %d dBfs%s%s",
+        si4713_rds_status_t rs;
+        if (si4713_asq_status(&fm, &asq) == ESP_OK && si4713_tune_status(&fm, &st) == ESP_OK &&
+            si4713_rds_status(&fm, &rs) == ESP_OK) {
+            ESP_LOGI(TAG, "tx %u.%02u MHz %u dBuV cap %u | audio in %d dBfs%s | rds ps=%d rt=%d",
                      st.freq_10khz / 100, st.freq_10khz % 100, st.power_dbuv, st.antcap,
-                     asq.in_level_db,
-                     asq.overmod ? " OVERMOD" : "",
-                     asq.level_low ? " (low)" : "");
+                     asq.in_level_db, asq.overmod ? " OVERMOD" : "", rs.ps_xmit, rs.cbuf_xmit);
         }
     }
 }
