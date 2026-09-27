@@ -9,15 +9,22 @@
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
-if ! command -v gitleaks >/dev/null 2>&1; then
-  echo "gitleaks is not installed. Fedora: sudo dnf install gitleaks" >&2
+# Native binary when present (Fedora: sudo dnf install gitleaks), otherwise the
+# official image through podman; same version as CI so the two agree.
+GITLEAKS_IMAGE="ghcr.io/gitleaks/gitleaks:v8.30.0"
+if command -v gitleaks >/dev/null 2>&1; then
+  run_gitleaks() { gitleaks "$@"; }
+elif command -v podman >/dev/null 2>&1; then
+  run_gitleaks() { podman run --rm -v "$PWD":/repo:Z -w /repo "$GITLEAKS_IMAGE" "$@"; }
+else
+  echo "neither gitleaks nor podman is available" >&2
   exit 2
 fi
 
 if [[ "${1:-}" == "--staged" ]]; then
-  gitleaks protect --staged --config .gitleaks.toml --redact --verbose
+  run_gitleaks protect --staged --config .gitleaks.toml --redact --verbose
 else
-  gitleaks detect --config .gitleaks.toml --redact --verbose
+  run_gitleaks detect --config .gitleaks.toml --redact --verbose
 fi
 
 # Audio never belongs in the tree, regardless of size.

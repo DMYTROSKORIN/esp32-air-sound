@@ -24,7 +24,9 @@ Nothing that ties the project to one particular home or person:
 - Photos that show the interior of the home. Board-on-the-bench photos are fine.
 
 `tools/check-private.sh` runs gitleaks with the project rules in `.gitleaks.toml` over the
-tree and the full history; CI runs the same on every push. A finding is a blocker, not a
+tree and the full history (native binary or the official image via podman); CI runs the same
+on every push, but hosted runners do not start for this private repository while the account's
+spending limit blocks them, so the local script is the gate until the repository is public. A finding is a blocker, not a
 warning. If something private is committed anyway, rewriting history is the fix, not a
 follow-up commit that deletes it.
 

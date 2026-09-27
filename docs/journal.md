@@ -24,3 +24,7 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
 - One thing to know before planning the source: the S3 has no Bluetooth Classic, so it cannot
   be an A2DP (Bluetooth speaker) sink.
 - Module close-ups were not committed: taken in hand, fingerprints legible. Retake on the bench.
+- CI does not run yet: GitHub refuses to start hosted runners for this private repository
+  ("recent account payments have failed or your spending limit needs to be increased").
+  Until the repository is public, `tools/check-private.sh` is the gate; it runs the same
+  gitleaks version as the workflow, through podman when the binary is not installed.
