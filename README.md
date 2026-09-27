@@ -42,6 +42,7 @@ bench work is done.
 - `docs/wiring.md` — how to connect them, step by step, with the checks that matter.
 - `docs/roadmap.md` — the whole picture, the protocol choice, and the steps to get there.
 - `docs/senders.md` — how to play to it from iOS, macOS, Linux and Windows, and the rules for several senders.
+- `docs/mqtt.md` — draft contract for the smartest-home remote (step 3), for the owner to review.
 - `tools/check-private.sh` — the privacy scan that runs locally and in CI.
 - `CLAUDE.md` — working rules for the repository, including what must never be committed.
 
