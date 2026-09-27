@@ -26,8 +26,8 @@ Bluetooth Classic) are out.
 |------|-------------|--------------------|
 | 0 | Bench wired per `wiring.md`, power checked | nothing yet |
 | 1 | Firmware: I2C finds the Si4713, DAC plays a test tone, transmitter on air with RDS PS | a 1 kHz tone in stereo, station name on the display |
-| 2 | AirPlay receiver → I2S → FM; metadata → RDS PS/RT | music from the phone, track title scrolling |
-| 3 | Wi-Fi provisioning without secrets in the tree, status page, frequency/power/RDS settings over MQTT; the smartest-home remote drives them | frequency changes from the remote |
+| 2 | AirPlay receiver → I2S → FM; metadata → RDS PS/RT. **Streams from Fedora as of 2026-09-28; iOS/macOS and RDS metadata pending** | music from the phone, track title scrolling |
+| 3 | ~~Wi-Fi provisioning~~ (done with step 2: captive setup page, signed OTA), status page, frequency/power/RDS settings over MQTT; the smartest-home remote drives them | frequency changes from the remote |
 | 4 | INMP441 + on-device keyword spotting for next/stop/play, sent back over DACP | the track skips when told to |
 | 5 | LM2596 power from a wall supply, enclosure, antenna done properly | the same, without the laptop |
 

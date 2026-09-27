@@ -2,6 +2,17 @@
 
 All notable changes to this project are recorded here. Versions are firmware versions.
 
+## [Unreleased]
+
+### Added
+- AirPlay (RAOP) receiver: the station appears as an audio output on iOS, macOS and PipeWire;
+  lossless ALAC in, 32-bit I2S out, track metadata to RDS radiotext, play/pause on BOOT.
+- Setup over the phone: open network `AirSound-Setup`, captive page with network, station name,
+  frequency, power and auto-update; the device joins the network before it saves anything.
+- Signed A/B OTA from this repository's GitHub Releases, self-test with rollback, daily check.
+- LED and BOOT button in the bastion language; boot counter and reset reason in the journal.
+- Two 6 MB OTA slots; Wi-Fi power save off while connected.
+
 ## [0.1.0] — 2026-09-27
 
 ### Added

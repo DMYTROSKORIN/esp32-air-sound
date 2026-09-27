@@ -17,9 +17,10 @@
 > Early R&D. Nothing here is a product yet. Expect the hardware list, the architecture and
 > the firmware to change as the bench answers questions.
 
-Where it stands: the bench transmits. Firmware 0.1.0 finds the Si4713, plays a test tone
-through the PCM5102 and puts it on 76.50 MHz with RDS; a receiver next to the board beeps.
-Next is the AirPlay receiver (`docs/roadmap.md`, step 2).
+Where it stands: the bench transmits and streams. The board finds the Si4713, goes on air at
+76.50 MHz with RDS, and shows up as an AirPlay output; the first stream (from Fedora, over
+PipeWire) reached the transmitter's input on 2026-09-28. iOS and macOS are next to be tried
+(`docs/roadmap.md`, step 2).
 
 ## What is this?
 
@@ -51,4 +52,5 @@ personal contact details, no recordings. See `CLAUDE.md` for the full list and
 
 ## License
 
-MIT, see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE). Third-party parts (the RAOP receiver, Apple's ALAC decoder) and their
+licences are listed in [NOTICE](NOTICE).

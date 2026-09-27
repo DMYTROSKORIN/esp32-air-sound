@@ -13,3 +13,5 @@ marked, so the path is visible.
 | 2026-09-27 | smartest-home stays private; this repository carries only the MQTT contract the remote uses. | The two projects have different audiences. |
 | 2026-09-27 | Bench is powered from USB; the LM2596 comes in at step 5. | One less thing to get wrong on the first assembly. |
 | 2026-09-27 | Modules are powered from the devkit's `3V3` pin, not `5Vin`; the `IN-OUT` pads stay open. | `5Vin` is input-only on this devkit. 3.3 V is within both modules' range and puts the Si4713 module's I2C pull-ups at ESP32 logic level. |
+| 2026-09-28 | AirPlay comes from squeezelite-esp32's RAOP component (MIT) plus Apple's ALAC decoder (Apache 2.0); the repository stays MIT, third-party parts listed in NOTICE. | Owner: reuse what works. The component's only GPL file was its log header, replaced. |
+| 2026-09-28 | Setup, button and LED behaviour follow esp32-s3-n16r8-bastion; the ESP-IDF implementation comes from smartest-home's components. | Owner's choice; both are the owner's projects. |

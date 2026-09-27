@@ -103,3 +103,28 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
   RDS page was selected. On that radio `DISPLAY` cycles the top-right corner only; the RDS
   pages (PS, PTY, radiotext, date) are on `INFO`. The chip's own counters agree: components
   0x0007, PS and radiotext groups transmitting. Step 1 done end to end.
+
+## 2026-09-28 — AirPlay: first stream
+
+- Owner's decisions overnight: reuse rather than rewrite, GPL acceptable; copy the smartest-home
+  components; setup, button and LED behaviour from bastion; no resistors in the house yet; the
+  antenna wire is only pushed into `Ant` for now.
+- Foundation ported from smartest-home in ESP-IDF 5.5: NVS configuration, RAM journal, Wi-Fi
+  station with the captive setup page (now asks for station name, frequency, power and
+  auto-update, and joins the network before writing anything), signed A/B OTA against this
+  repository's GitHub Releases with a new Ed25519 key, boot counter and reset reason. LED and
+  BOOT button follow bastion's language. Audio path rebuilt as one 32-bit I2S output with a
+  two-second PSRAM ring and the line trim applied in 32-bit arithmetic. Two 6 MB OTA slots.
+  Wi-Fi power save off once connected (ping went from 250 ms to a few ms).
+- AirPlay: the RAOP component from squeezelite-esp32 turned out to be MIT (philippe44's
+  AirConnect code), only its logging header was GPL; that header is replaced, Apple's ALAC
+  decoder is compiled from source (Apache 2.0) behind a small wrapper, and the repository stays
+  MIT (NOTICE lists the parts). Three things bit on the way: the tasks were created with a core
+  id of -1, which the current FreeRTOS asserts on; Apple's endian header does not know Xtensa
+  and read the config cookie backwards until `TARGET_RT_LITTLE_ENDIAN` was defined; and a flash
+  I started in the background while another process opened the port left a half-written image
+  ("invalid segment length") — flash from the foreground, alone on the port.
+- Result: `Air-Sound` appears as an AirPlay output on Fedora (PipeWire's RAOP discover module);
+  a test tone streamed for 28 s, the transmitter reported −20 dBfs at its input while it
+  played and −63 dBfs afterwards. iOS and macOS, and the track title in RDS, still to be
+  tried by the owner.

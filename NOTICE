@@ -1,0 +1,13 @@
+esp32-air-sound is MIT licensed (see LICENSE). It contains code from other projects:
+
+components/raop/raop.c, rtp.c, util.c, dmap_parser.c, platform.h, raop_sink.h
+  AirPlay (RAOP) receiver by Philippe G. (philippe44), with RTP code by James Laird
+  (shairport) and DMAP parsing by Jeffrey Wescott, as shipped in squeezelite-esp32.
+  MIT License. Small changes for ESP-IDF 5.5 (mbedtls 3, esp_netif) are marked in the files.
+
+components/raop/alac/
+  Apple Lossless (ALAC) decoder, Copyright (c) 2011 Apple Inc.
+  Apache License 2.0, see components/raop/alac/LICENSE.
+
+components/as_core, as_net, as_ota, as_sysmon, tools/provision.py, tools/ota_sign.py
+  Descended from the author's own smartest-home firmware (same author, same licence).

@@ -12,6 +12,7 @@
 #include "as_net.h"
 #include "as_ota.h"
 #include "as_provision.h"
+#include "airplay.h"
 #include "audio_out.h"
 #include "board.h"
 #include "button.h"
@@ -92,6 +93,7 @@ static void net_cb(as_net_state_t st, void *user)
         // keeps the radio awake, as bastion does.
         esp_wifi_set_ps(WIFI_PS_NONE);
         start_mdns();
+        airplay_start();
         as_ota_note_service_up();
         break;
     case AS_NET_PROVISIONING:
@@ -108,7 +110,8 @@ static void button_cb(button_event_t ev)
 {
     switch (ev) {
     case BUTTON_SHORT:
-        as_logf("button: short press");   // play/pause once there is a stream to control
+        as_logf("button: short press, play/pause");
+        airplay_toggle();
         break;
     case BUTTON_SETUP:
         as_logf("button: 5 s hold, opening the setup portal");
@@ -124,6 +127,13 @@ static void button_cb(button_event_t ev)
         esp_restart();
         break;
     }
+}
+
+static void airplay_state_cb(bool streaming)
+{
+    s_streaming = streaming;
+    as_logf("airplay: %s", streaming ? "streaming" : "idle");
+    update_led();
 }
 
 static bool ota_may_install(void)
@@ -159,6 +169,8 @@ void app_main(void)
     ESP_ERROR_CHECK(audio_out_init(PIN_I2S_BCK, PIN_I2S_LRCK, PIN_I2S_DOUT));
     update_led();
 
+    airplay_init(airplay_state_cb);
+
     // Network: station with the stored credentials, or the setup portal.
     as_net_init(net_cb, NULL);
     as_net_start();
@@ -175,7 +187,7 @@ void app_main(void)
 
     char line[160];
     for (;;) {
-        vTaskDelay(pdMS_TO_TICKS(30000));
+        vTaskDelay(pdMS_TO_TICKS(s_streaming ? 5000 : 30000));
         fm_status_line(line, sizeof line);
         ESP_LOGI(TAG, "%s | net %s ip %s rssi %d | audio %s, queued %u ms | heap %lu", line, s_net_up ? "up" : "down",
                  as_net_ip(), as_net_rssi(), audio_out_active() ? "streaming" : "silent",
