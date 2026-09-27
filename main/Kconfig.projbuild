@@ -14,10 +14,12 @@ menu "esp32-air-sound"
     config AIRSOUND_LINE_TRIM_DB
         int "Output trim, dB below full scale, applied to everything"
         range 0 40
-        default 14
+        default 18
         help
-            The PCM5102 puts out 2.1 Vrms at full scale, the Si4713 line input clips at 636 mVpk.
-            Until a resistor divider sits in the aux path this digital trim keeps the transmitter
-            out of its limiter. The trim is applied in 32-bit arithmetic on the way to the DAC.
+            The PCM5102 puts out 2.1 Vrms at full scale, the Si4713 line input is 636 mVpk at its
+            most tolerant setting: 14 dB of trim lands full scale exactly at the transmitter's
+            0 dBfs, and pre-emphasis then pushes bright peaks into its limiter. 18 dB leaves 4 dB
+            of headroom, so the limiter stays out of the way of the music. Until a resistor
+            divider sits in the aux path this trim is digital, applied in 32-bit arithmetic.
 
 endmenu

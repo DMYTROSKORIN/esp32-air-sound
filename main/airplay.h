@@ -4,6 +4,7 @@
 // and the track's metadata to the transmitter's RDS.
 
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef void (*airplay_state_cb_t)(bool streaming);
 
@@ -11,6 +12,8 @@ void airplay_init(airplay_state_cb_t cb);
 // Call once the station interface has an address. Safe to call again after a reconnect.
 void airplay_start(void);
 bool airplay_streaming(void);
+// Diagnostics: count of implausible sample-to-sample jumps seen in the decoded stream.
+uint32_t airplay_jumps(void);
 // Transport commands back to the sender (DACP): play/pause toggle, next, previous.
 void airplay_toggle(void);
 void airplay_next(void);

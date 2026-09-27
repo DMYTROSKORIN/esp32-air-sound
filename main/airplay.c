@@ -20,6 +20,11 @@
 static uint8_t *s_rtp_buf;
 
 static const char *TAG = "airplay";
+#include "esp_timer.h"
+static uint32_t s_jumps, s_calls;
+static int16_t s_last_l, s_prev_l;
+static volatile uint32_t s_last_sound_ms;   // last time the decoded stream carried something other than silence
+static uint32_t s_len_hist[4];               // packets of 352 frames / fewer / more / other
 static struct raop_ctx_s *s_raop;
 static airplay_state_cb_t s_cb;
 static volatile bool s_streaming;
@@ -53,6 +58,7 @@ static bool cmd_cb(raop_event_t event, ...)
     case RAOP_STREAM:
     case RAOP_PLAY:
     case RAOP_RESUME:
+        s_last_sound_ms = (uint32_t)(esp_timer_get_time() / 1000ULL);   // grace period for the first packets
         set_streaming(true);
         break;
     case RAOP_FLUSH:
@@ -98,10 +104,60 @@ static bool cmd_cb(raop_event_t event, ...)
 }
 
 // Decoded 16-bit stereo PCM, due at `playtime`; the RTP layer already waited for that moment.
+// A session counts as busy while it delivered actual sound in the last five seconds. A sender that
+// holds the connection open with nothing (or digital silence) to play does not get to block others.
+static bool session_busy(void)
+{
+    if (!s_streaming) return false;
+    uint32_t now = (uint32_t)(esp_timer_get_time() / 1000ULL);
+    return (now - s_last_sound_ms) < 5000;
+}
+
+// Sanity check on what the decoder hands us: neighbouring samples of any music or tone move by
+// hundreds, not tens of thousands; a jump that large is a glitch. Counted per left sample.
+static void inspect(const int16_t *pcm, size_t frames)
+{
+    static uint32_t at_start, inside, pos_hist[8];
+    bool loud = false;
+    for (size_t i = 0; i < frames; i++) {
+        int16_t l = pcm[2 * i];
+        if (l > 200 || l < -200) loud = true;
+        int d = (int)l - (int)s_last_l;
+        if (d > 12000 || d < -12000) {
+            s_jumps++;
+            if (i == 0) at_start++; else inside++;
+            pos_hist[(i * 8) / (frames ? frames : 1)]++;
+            if (s_jumps <= 8)
+                ESP_LOGW(TAG, "jump at frame %u of %u: ... %d %d | %d %d %d ...", (unsigned)i, (unsigned)frames, s_prev_l,
+                         s_last_l, l, i + 1 < frames ? pcm[2 * (i + 1)] : 0, i + 2 < frames ? pcm[2 * (i + 2)] : 0);
+        }
+        s_prev_l = s_last_l;
+        s_last_l = l;
+    }
+    s_len_hist[frames == 352 ? 0 : frames < 352 ? 1 : frames > 352 ? 2 : 3]++;
+    if (loud) s_last_sound_ms = (uint32_t)(esp_timer_get_time() / 1000ULL);
+    if ((s_calls % 1000) == 500)
+        ESP_LOGI(TAG, "packets: 352 frames %lu, shorter %lu, longer %lu", (unsigned long)s_len_hist[0],
+                 (unsigned long)s_len_hist[1], (unsigned long)s_len_hist[2]);
+    if ((s_calls % 1000) == 500)
+        ESP_LOGI(TAG, "jumps: at packet start %lu, inside %lu; position histogram %lu %lu %lu %lu %lu %lu %lu %lu",
+                 (unsigned long)at_start, (unsigned long)inside, (unsigned long)pos_hist[0], (unsigned long)pos_hist[1],
+                 (unsigned long)pos_hist[2], (unsigned long)pos_hist[3], (unsigned long)pos_hist[4], (unsigned long)pos_hist[5],
+                 (unsigned long)pos_hist[6], (unsigned long)pos_hist[7]);
+    if ((++s_calls % 1000) == 1) {
+        ESP_LOGI(TAG, "pcm sample: %d %d %d %d %d %d %d %d | %d %d %d %d %d %d %d %d (jumps so far %lu)",
+                 pcm[0], pcm[2], pcm[4], pcm[6], pcm[8], pcm[10], pcm[12], pcm[14],
+                 pcm[16], pcm[18], pcm[20], pcm[22], pcm[24], pcm[26], pcm[28], pcm[30], (unsigned long)s_jumps);
+    }
+}
+
+uint32_t airplay_jumps(void) { return s_jumps; }
+
 static void data_cb(const u8_t *data, size_t len, u32_t playtime)
 {
     (void)playtime;
     size_t frames = len / 4;
+    inspect((const int16_t *)data, frames);
     size_t taken = audio_out_write((const int16_t *)data, frames);
     if (taken < frames) ESP_LOGW(TAG, "dropped %u frames", (unsigned)(frames - taken));
 }
@@ -123,6 +179,7 @@ void airplay_start(void)
     static char name[33];
     snprintf(name, sizeof name, "%s", c->name);
     // Latency 0 lets the sender choose (about two seconds for iOS, less for macOS/PipeWire).
+    raop_set_busy_check(session_busy);
     s_raop = raop_create(ip.ip.addr, name, mac, 0, cmd_cb, data_cb);
     if (s_raop) as_logf("airplay: \"%s\" advertised", name);
     else as_logf("airplay: failed to start");

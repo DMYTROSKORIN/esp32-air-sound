@@ -73,8 +73,8 @@ static log_level 	*loglevel = &raop_loglevel;
 // default buffer size
 #define BUFFER_FRAMES_MAX 	((RAOP_SAMPLE_RATE * 10) / 352 )
 #define BUFFER_FRAMES_MIN 	( (150 * RAOP_SAMPLE_RATE * 2) / (352 * 100) )
-#define MAX_PACKET       1408
-#define MIN_LATENCY		11025
+#define MAX_PACKET       2048   // was 1408: an uncompressed 352-frame ALAC packet is 1424 bytes with its RTP header (PipeWire sends those) and lost its tail
+#define MIN_LATENCY		44100   // one second: senders that ask for less (PipeWire: 250 ms) get no room for Wi-Fi jitter
 #define MAX_LATENCY   	( (120 * RAOP_SAMPLE_RATE * 2) / 100 )
 
 #define RTP_STACK_SIZE	(4*1024)
@@ -518,7 +518,7 @@ static void buffer_put_packet(rtp_t *ctx, seq_t seqno, unsigned rtptime, bool fi
 	}
 
 	if (ctx->in_frames++ > 1000) {
-		LOG_INFO("[%p]: fill [level:%hu rec:%u] [W:%hu R:%hu]", ctx, ctx->ab_write - ctx->ab_read, ctx->resent_rec, ctx->ab_write, ctx->ab_read);
+		LOG_INFO("[%p]: fill [level:%hu rec:%u silent:%u discarded:%u latency:%u] [W:%hu R:%hu]", ctx, ctx->ab_write - ctx->ab_read, ctx->resent_rec, ctx->silent_frames, ctx->discarded, ctx->latency, ctx->ab_write, ctx->ab_read);
 		ctx->in_frames = 0;
 	}
 
@@ -543,7 +543,10 @@ static void buffer_put_packet(rtp_t *ctx, seq_t seqno, unsigned rtptime, bool fi
 // push as many frames as possible through callback
 static void buffer_push_packet(rtp_t *ctx) {
 	abuf_t *curframe = NULL;
-	u32_t now, playtime, hold = max((ctx->latency * 1000) / (8 * RAOP_SAMPLE_RATE), 100);
+	// Frames go to the sink up to half the latency ahead of their play time (upstream: an eighth).
+	// The sink here is a two-second ring that plays continuously, so the extra lead is what keeps
+	// it from running dry with a sender that transmits close to real time (PipeWire).
+	u32_t now, playtime, hold = max((ctx->latency * 1000) / (2 * RAOP_SAMPLE_RATE), 100);
 
 	// not ready to play yet
 	if (ctx->state != RTP_PLAY || ctx->synchro.status != (RTP_SYNC | NTP_SYNC)) return;

@@ -19,6 +19,9 @@ size_t audio_out_write(const int16_t *frames, size_t nframes);
 void audio_out_flush(void);
 // Frames waiting in the ring.
 size_t audio_out_queued(void);
+// Diagnostics: silent chunks emitted while a stream was flowing, and the ring's low-water mark.
+uint32_t audio_out_underruns(void);
+size_t audio_out_min_queued(void);
 
 // Gain in dB relative to full scale, 0 or negative; -144 or lower is mute. Applied on top of the
 // build-time line trim. The AirPlay sender's volume lands here.

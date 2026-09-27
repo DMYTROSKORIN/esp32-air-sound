@@ -17,6 +17,7 @@ static const char *TAG = "audio";
 #define SAMPLE_RATE 44100
 #define RING_FRAMES (SAMPLE_RATE * 2)     // 2 s
 #define CHUNK_FRAMES 441                  // 10 ms per I2S write
+#define PREFILL_FRAMES (SAMPLE_RATE / 10)  // a stream starts playing once 100 ms are queued
 
 static i2s_chan_handle_t s_tx;
 static int16_t *s_ring;                   // interleaved L R, RING_FRAMES frames, in PSRAM
@@ -24,6 +25,8 @@ static volatile size_t s_rd, s_wr;        // frame indices
 static SemaphoreHandle_t s_lock;
 static volatile bool s_tone;
 static volatile bool s_active;
+static volatile uint32_t s_underruns;   // chunks of silence while a stream was flowing
+static volatile size_t s_min_queued = (size_t)-1;
 static volatile int32_t s_gain_q16;       // 65536 = 0 dB (before the trim)
 static float s_gain_db;
 static int32_t s_trim_q16;
@@ -45,6 +48,16 @@ static size_t queued(void)
 }
 
 size_t audio_out_queued(void) { return queued(); }
+
+uint32_t audio_out_underruns(void) { return s_underruns; }
+
+// Lowest ring level since the last call, in frames; resets the watermark.
+size_t audio_out_min_queued(void)
+{
+    size_t m = s_min_queued;
+    s_min_queued = (size_t)-1;
+    return m == (size_t)-1 ? 0 : m;
+}
 
 size_t audio_out_write(const int16_t *frames, size_t nframes)
 {
@@ -83,7 +96,12 @@ static void out_task(void *arg)
         // Total gain: user gain x trim, both Q16, product back to Q16 (max 65536 x 65536 >> 16).
         int64_t gain = ((int64_t)s_gain_q16 * s_trim_q16) >> 16;
         size_t have = queued();
-        bool from_ring = have >= CHUNK_FRAMES;
+        // A fresh stream is let through only once it has 100 ms in hand: the first packets of a
+        // session arrive in a burst and playing them the instant they land is what caused the
+        // three underruns at every start.
+        bool from_ring = s_active ? have >= CHUNK_FRAMES : have >= PREFILL_FRAMES;
+        if (s_active && !from_ring) s_underruns++;
+        if (have < s_min_queued) s_min_queued = have;
         if (from_ring) {
             size_t rd = s_rd;
             for (int i = 0; i < CHUNK_FRAMES; i++) {

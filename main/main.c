@@ -189,9 +189,11 @@ void app_main(void)
     for (;;) {
         vTaskDelay(pdMS_TO_TICKS(s_streaming ? 5000 : 30000));
         fm_status_line(line, sizeof line);
-        ESP_LOGI(TAG, "%s | net %s ip %s rssi %d | audio %s, queued %u ms | heap %lu", line, s_net_up ? "up" : "down",
-                 as_net_ip(), as_net_rssi(), audio_out_active() ? "streaming" : "silent",
-                 (unsigned)(audio_out_queued() * 1000 / 44100), (unsigned long)esp_get_free_heap_size());
+        ESP_LOGI(TAG, "%s | net %s rssi %d | audio %s, queued %u ms, min %u ms, underruns %lu | heap %lu", line,
+                 s_net_up ? "up" : "down", as_net_rssi(), audio_out_active() ? "streaming" : "silent",
+                 (unsigned)(audio_out_queued() * 1000 / 44100), (unsigned)(audio_out_min_queued() * 1000 / 44100),
+                 (unsigned long)audio_out_underruns(), (unsigned long)esp_get_free_heap_size());
+        if (s_streaming) ESP_LOGI(TAG, "decoded stream: %lu jumps", (unsigned long)airplay_jumps());
         update_led();
     }
 }

@@ -100,6 +100,7 @@ static void		cleanup_rtsp(raop_ctx_t *ctx, bool abort);
 static bool 	handle_rtsp(raop_ctx_t *ctx, int sock);
 
 static char*	rsa_apply(unsigned char *input, int inlen, int *outlen, int mode);
+static bool (*raop_busy_check)(void);
 static int  	base64_pad(char *src, char **padded);
 static int 		base64_encode(const void *data, int size, char **str);
 static int 		base64_decode(const char *str, void *data);
@@ -384,6 +385,22 @@ static void rtsp_thread(void *arg) {
 		struct timeval timeout = {0, 100*1000};
 		int n;
 		bool res = false;
+
+		// esp32-air-sound: another client knocking while the current session has gone quiet takes
+		// the receiver over; the quiet session is closed and the new one accepted on the next turn.
+		if (sock != -1 && raop_busy_check && !raop_busy_check()) {
+			fd_set lfds;
+			struct timeval zero = {0, 0};
+			FD_ZERO(&lfds);
+			FD_SET(ctx->sock, &lfds);
+			if (select(ctx->sock + 1, &lfds, NULL, NULL, &zero) > 0) {
+				LOG_INFO("new client while session %u is idle: handing over", sock);
+				ctx->cmd_cb(RAOP_STOP);
+				cleanup_rtsp(ctx, true);
+				closesocket(sock);
+				sock = -1;
+			}
+		}
 
 		if (sock == -1) {
 			struct sockaddr_in peer;
@@ -776,6 +793,8 @@ static void search_remote(void *args) {
  }
 #endif
 
+
+void raop_set_busy_check(bool (*busy)(void)) { raop_busy_check = busy; }
 
 static int raop_rng(void *ctx, unsigned char *out, size_t len) { esp_fill_random(out, len); return 0; }
 

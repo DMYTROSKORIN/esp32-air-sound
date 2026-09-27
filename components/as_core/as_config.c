@@ -12,6 +12,7 @@ static const char *NS = "as";
 static as_config_t s_cfg;
 
 #define DEFAULT_NAME "Air-Sound"
+#define DEFAULT_PS   "AirSound"
 #define DEFAULT_RT   "Air-Sound - esp32-air-sound"
 
 static void load_str(nvs_handle_t h, const char *key, char *out, size_t cap, const char *def)
@@ -64,7 +65,7 @@ void as_config_init(void)
     load_str(h, "wifi_ssid", s_cfg.wifi_ssid, sizeof(s_cfg.wifi_ssid), "");
     load_str(h, "wifi_pass", s_cfg.wifi_pass, sizeof(s_cfg.wifi_pass), "");
     load_str(h, "name", s_cfg.name, sizeof(s_cfg.name), DEFAULT_NAME);
-    load_str(h, "rds_ps", s_cfg.rds_ps, sizeof(s_cfg.rds_ps), DEFAULT_NAME);
+    load_str(h, "rds_ps", s_cfg.rds_ps, sizeof(s_cfg.rds_ps), DEFAULT_PS);
     load_str(h, "rds_rt", s_cfg.rds_rt, sizeof(s_cfg.rds_rt), DEFAULT_RT);
     s_cfg.freq_10khz = load_u16(h, "freq", 7650);
     s_cfg.rds_pi = load_u16(h, "rds_pi", 0xADAF);
