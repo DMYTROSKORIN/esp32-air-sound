@@ -1,0 +1,34 @@
+name: Privacy scan
+
+# Fails the build on anything that would identify the home this runs in:
+# credentials, LAN or MAC addresses, personal e-mail, tracked recordings.
+# It scans the full history, so a leak that was later deleted still fails.
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  gitleaks:
+    name: gitleaks (tree + history)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
+          GITLEAKS_ENABLE_SUMMARY: "true"
+      - name: No audio in the tree
+        run: |
+          if git ls-files | grep -Eiq '\.(wav|pcm|raw|flac|mp3|ogg|opus)$'; then
+            echo "::error::audio files are tracked in git"; git ls-files | grep -Ei '\.(wav|pcm|raw|flac|mp3|ogg|opus)$'; exit 1
+          fi

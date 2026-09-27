@@ -1,0 +1,41 @@
+# ESP-IDF
+build/
+sdkconfig
+sdkconfig.old
+managed_components/
+dependencies.lock
+# PlatformIO / Arduino
+.pio/
+.pioenvs/
+.piolibdeps/
+# Editors
+.vscode/
+.idea/
+*.swp
+# Firmware images and debug output
+*.bin
+*.elf
+*.map
+# Anything that could carry private data. Never relax these.
+*.env
+.env*
+secrets.*
+*secret*
+*credential*
+*.pem
+*.key
+*.p12
+wifi_credentials.h
+# Recordings from the microphones and captured audio of any kind
+*.wav
+*.pcm
+*.raw
+*.flac
+*.mp3
+*.ogg
+*.opus
+recordings/
+captures/
+# Local scratch
+scratch/
+notes-private/
