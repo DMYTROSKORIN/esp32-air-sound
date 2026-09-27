@@ -31,7 +31,9 @@ of the signals: every wire stays on one board, and only the +5 V wire crosses th
 | Si4713 | `j` | 30–40 | RST CS SCL SDA GP1 GP2 3Vo GND VIN LIN RIN |
 | PCM5102 | `j` | 58–63 | SCK BCK DIN LCK GND VIN (VIN in the last row) |
 
-Rule for the wires: **signals in column `i`, power in column `f`**. Any hole `f–i` of a row is
+Rule for the wires: **signals in column `i`, power in column `f`**. Count the Si4713 pins
+from the top rather than trusting a row number: 1 RST, 2 CS, 3 SCL, 4 SDA, 5 GP1, 6 GP2,
+7 3Vo, 8 GND, 9 VIN, 10 LIN, 11 RIN. Any hole `f–i` of a row is
 connected to the header pin in `j` of that row. Row numbers read from the photo can be off by
 one; the pin names on the boards are the truth, the table below then shifts with them.
 
@@ -45,14 +47,14 @@ with a jumper if it is broken.
 |---|------|----|------|-------|
 | 1 | right board `b1` (row of devkit `5Vin`, top right pin) | left board `+` rail | red, long | the only wire that crosses the devkit; route it over the top edge past the USB ports |
 | 2 | `f22` (bottom `GND` of the left header) | left board `−` rail | black | |
-| 3 | `+` rail | `f37` (Si4713 `VIN`) | red | module regulates to 3.0 V |
-| 4 | `−` rail | `f36` (Si4713 `GND`) | black | |
+| 3 | `+` rail | `f38` (Si4713 `VIN`, 9th pin from the top) | red | module regulates to 3.0 V |
+| 4 | `−` rail | `f37` (Si4713 `GND`, 8th pin from the top) | black | |
 | 5 | `+` rail | `f63` (PCM5102 `VIN`) | red | |
 | 6 | `−` rail | `f62` (PCM5102 `GND`) | black | |
 | 7 | `−` rail | `f58` (PCM5102 `SCK`) | black | **required**: no MCLK, PLL from BCK; without it the DAC is silent |
 | 8 | `i13` (GPIO38) | `i30` (Si4713 `RST`) | white | firmware pulses it at start |
-| 9 | `i14` (GPIO39) | `i31` (Si4713 `SCL`) | yellow | pull-ups on the module |
-| 10 | `i15` (GPIO40) | `i32` (Si4713 `SDA`) | green | |
+| 9 | `i14` (GPIO39) | `i32` (Si4713 `SCL`, 3rd pin from the top) | yellow | pull-ups on the module |
+| 10 | `i15` (GPIO40) | `i33` (Si4713 `SDA`, 4th pin from the top) | green | |
 | 11 | `i16` (GPIO41) | `i59` (PCM5102 `BCK`) | blue | |
 | 12 | `i17` (GPIO42) | `i61` (PCM5102 `LCK`) | purple | |
 | 13 | `i18` (GPIO2) | `i60` (PCM5102 `DIN`) | grey | |
@@ -71,14 +73,14 @@ Firmware pins that must match: SDA 40, SCL 39, RST 38, BCK 41, LRCK 42, DOUT 2, 
    `H4L=L`; `H3L` on `L` is a hardware mute), put it back in column `j`, rows 58–63.
 3. Confirm the rows: Si4713 `RST` in 30 and `RIN` in 40, PCM5102 `SCK` in 58 and `VIN` in 63.
 4. Wires 1–2, then 3–4, then 5–7.
-5. Meter, continuity: `+` rail to `−` rail must not beep. Rows 36/37 and 62/63 are the easy
+5. Meter, continuity: `+` rail to `−` rail must not beep. Rows 37/38 and 62/63 are the easy
    places to be one row off.
 6. Signal wires 8–13, all column `i` to column `i`.
 7. Solder the antenna wire into `Ant` (pull the module out to do it). Hang the wire vertically,
    away from the USB cable and the Wi-Fi whip.
 8. Check both aux plugs are seated.
 9. USB into the UART port. LED on.
-10. Meter, DC volts, black probe on the `−` rail: `+` rail 4.7–5.1 V, Si4713 `3Vo` (`g35`) ≈ 3.0 V,
+10. Meter, DC volts, black probe on the `−` rail: `+` rail 4.7–5.1 V, Si4713 `3Vo` (`g36`) ≈ 3.0 V,
     devkit `3V3` ≈ 3.3 V.
 11. After a minute, touch the modules: warm is fine, hot is not.
 

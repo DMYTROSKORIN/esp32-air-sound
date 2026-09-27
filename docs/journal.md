@@ -54,3 +54,18 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
 - Convention for the bench: signals in column `i`, power in column `f`, so a hole name like
   `i13 → i30` is a complete instruction.
 - Bench photo committed (no hands in frame).
+
+## 2026-09-27 — bench wired and checked
+
+- Owner wired everything per `wiring.md`, rang out all connections (no short between rails,
+  rails continuous, power at every module pin, all six signals present and none crossed, CS
+  open, DAC jumpers L L H L) and measured the rails with USB in: +5 V rail, Si4713 3Vo,
+  devkit 3V3 all nominal. Nothing warm. Step 0 done.
+- esptool sees the chip on `/dev/ttyACM0`: ESP32-S3 rev v0.2, 16 MB flash, 8 MB PSRAM.
+- First firmware on the board: DAC and I2S come up, Si4713 does not answer, SDA reads low
+  with the chip in reset and after a 9-clock recovery. Cause found by the owner reading the
+  table against the board: the connection table skipped `CS` and had SCL, SDA, GND and VIN
+  of the Si4713 one row too high (`i31`/`i32`/`f36`/`f37` instead of `i32`/`i33`/`f37`/`f38`).
+  Wired that way, +5 V lands on the module's GND pin and 3Vo on the ground rail. Table,
+  map and page corrected; pins now also given as "n-th from the top" so a row miscount
+  cannot repeat this.
