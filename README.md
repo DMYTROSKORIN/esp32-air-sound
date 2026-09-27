@@ -19,10 +19,14 @@
 
 ## What is this?
 
-A home audio project with an ESP32 at its core. This repository is the whole project: the
-reasoning behind each hardware choice, the measurements that backed it, the firmware, and a
-dated journal of what was tried. It is being written as if it were already public, because it
-will be once the bench work is done.
+A home audio project with an ESP32-S3 at its core. On the bench today: an ESP32-S3-N16R8
+devkit, a PCM5102A I2S DAC, an Si4713 FM transmitter, an INMP441 I2S microphone and an LM2596
+buck converter, all described in `docs/hardware.md`. The working idea is that the ESP32 sources
+audio, the DAC makes it line level and the Si4713 puts it on the FM band, so every radio in
+the flat becomes a speaker. This repository is the whole project: the reasoning behind each
+hardware choice, the measurements that backed it, the firmware, and a dated journal of what
+was tried. It is being written as if it were already public, because it will be once the
+bench work is done.
 
 ## Where things are
 
