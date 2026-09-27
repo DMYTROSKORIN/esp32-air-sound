@@ -45,7 +45,7 @@ with a jumper if it is broken.
 
 | # | From | To | Wire | Notes |
 |---|------|----|------|-------|
-| 1 | right board `b1` (row of devkit `5Vin`, top right pin) | left board `+` rail | red, long | the only wire that crosses the devkit; route it over the top edge past the USB ports |
+| 1 | right board, column `b`, row of a devkit `3V3` pin (bottom of the right header) | `+` rail | red, long | the only wire that crosses the devkit. **Not `5Vin`**: on this devkit that pin is input-only unless the `IN-OUT` pads are bridged. The rail is 3.3 V |
 | 2 | `f22` (bottom `GND` of the left header) | left board `−` rail | black | |
 | 3 | `+` rail | `f38` (Si4713 `VIN`, 9th pin from the top) | red | module regulates to 3.0 V |
 | 4 | `−` rail | `f37` (Si4713 `GND`, 8th pin from the top) | black | |
@@ -62,7 +62,7 @@ with a jumper if it is broken.
 | 15 | Si4713 `Ant` hole | ~75 cm wire | solder | top-right corner of the module, over the gap |
 
 Left unconnected on purpose: Si4713 `CS` (open = `0x63`), `GP1`, `GP2`, `3Vo`, `LIN`, `RIN`;
-PCM5102 `R/G/L` pads and holes `1–4`; the devkit's whole right row except `5Vin`, and `3V3`.
+PCM5102 `R/G/L` pads and holes `1–4`; the devkit's whole right row except one `3V3` pin, and `5Vin`.
 
 Firmware pins that must match: SDA 40, SCL 39, RST 38, BCK 41, LRCK 42, DOUT 2, no MCLK.
 
@@ -80,7 +80,7 @@ Firmware pins that must match: SDA 40, SCL 39, RST 38, BCK 41, LRCK 42, DOUT 2, 
    away from the USB cable and the Wi-Fi whip.
 8. Check both aux plugs are seated.
 9. USB into the UART port. LED on.
-10. Meter, DC volts, black probe on the `−` rail: `+` rail 4.7–5.1 V, Si4713 `3Vo` (`g36`) ≈ 3.0 V,
+10. Meter, DC volts, black probe on the `−` rail: `+` rail ≈ 3.3 V, Si4713 `3Vo` (`g36`) ≈ 3.0 V,
     devkit `3V3` ≈ 3.3 V.
 11. After a minute, touch the modules: warm is fine, hot is not.
 

@@ -151,9 +151,14 @@ the bench is `wiring.md`.
 | — | open | Si4713 `CS` (address 0x63) |
 | Audio | PCM5102 jack | Si4713 jack, 3.5 mm aux cable |
 
-Power: `5Vin` (right header) → left board `+` rail → PCM5102 `VIN`, Si4713 `VIN`. Bottom `GND`
-of the left header → left board `−` rail → both module `GND` pins and PCM5102 `SCK`. The
-devkit's `3V3` stays unconnected until the microphone (step 4).
+Power: `3V3` (right header, bottom) → `+` rail → PCM5102 `VIN`, Si4713 `VIN`. Bottom `GND`
+of the left header → `−` rail → both module `GND` pins and PCM5102 `SCK`.
+
+**`5Vin` does not output 5 V on this devkit.** The header pin sits behind a diode and only
+accepts power in; the `IN-OUT` solder pads next to the RGB LED bridge it to USB VBUS when
+closed. Left open here: both modules run from 3.3 V, and with the Si4713 module's I2C pull-ups
+referenced to its VIN, that keeps the bus at 3.3 V for the ESP32-S3 inputs. Cost an evening,
+see the journal.
 
 ## Photos
 

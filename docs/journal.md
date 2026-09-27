@@ -69,3 +69,18 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
   Wired that way, +5 V lands on the module's GND pin and 3Vo on the ground rail. Table,
   map and page corrected; pins now also given as "n-th from the top" so a row miscount
   cannot repeat this.
+
+## 2026-09-27 — first carrier
+
+- With the rows fixed the Si4713 still did not answer and both I2C lines read low. Meter on
+  the module: VIN 0.75 V, 3Vo 0.23 V, SCL/SDA 1.4 V. The module had no power at all: on this
+  devkit the `5Vin` header pin does **not** carry USB 5 V out unless the `IN-OUT` solder pads
+  next to the RGB LED are bridged. The 1.4 V on the bus was the ESP32's pull-ups feeding an
+  unpowered chip through its protection diodes, which the ESP32 reads as 0.
+- Fix: the modules' `+` rail now comes from the devkit's `3V3` pin. Both modules accept it
+  (Si4713 3–5 V, PCM5102 3.3–5.5 V) and the module's I2C pull-ups now sit at 3.3 V instead
+  of 5 V, which is what the ESP32-S3 inputs want anyway. `IN-OUT` stays open.
+- Result: `si4713 at 0x63: part 13, firmware 2.0, chip rev A`, on air at 100.00 MHz,
+  105 dBuV, antenna cap 54 (13.5 pF), RDS PS loaded. The module's red LED lit for the first
+  time (it is a power LED). Audio input still reads −69 dBfs: the DAC-to-transmitter path is
+  the next thing to check.

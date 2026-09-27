@@ -12,3 +12,4 @@ marked, so the path is visible.
 | 2026-09-27 | Regulatory aspects of FM transmission are out of scope for this repository. | Owner's decision. |
 | 2026-09-27 | smartest-home stays private; this repository carries only the MQTT contract the remote uses. | The two projects have different audiences. |
 | 2026-09-27 | Bench is powered from USB; the LM2596 comes in at step 5. | One less thing to get wrong on the first assembly. |
+| 2026-09-27 | Modules are powered from the devkit's `3V3` pin, not `5Vin`; the `IN-OUT` pads stay open. | `5Vin` is input-only on this devkit. 3.3 V is within both modules' range and puts the Si4713 module's I2C pull-ups at ESP32 logic level. |

@@ -128,7 +128,8 @@ void app_main(void)
     }
     bool fm_ok = (err == ESP_OK);
     if (fm_ok) {
-        ESP_LOGI(TAG, "si4713 at 0x%02X: part %u, firmware %u.%u, patch %02X%02X, component %u.%u, chip rev %c",
+        // Firmware and component revisions come back as ASCII digits.
+        ESP_LOGI(TAG, "si4713 at 0x%02X: part %u, firmware %c.%c, patch %02X%02X, component %c.%c, chip rev %c",
                  addr, rev.part_number, rev.fw_major, rev.fw_minor, rev.patch_hi, rev.patch_lo,
                  rev.cmp_major, rev.cmp_minor, rev.chip_rev);
         if (rev.part_number != 13) ESP_LOGW(TAG, "part number is not 13: is this really an Si4713?");
