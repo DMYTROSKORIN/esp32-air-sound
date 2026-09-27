@@ -18,7 +18,7 @@ Nothing in this list amplifies or drives a speaker, and that is the point: the E
 AirPlay receiver, the DAC turns the stream into a line-level signal, the Si4713 puts it on the
 air in stereo with RDS, and every FM radio in the flat is a speaker. See `roadmap.md`.
 
-![ESP32-S3-N16R8 devkit straddling two breadboards](assets/esp32-s3-devkit-breadboard.jpg)
+![Bench: devkit between two breadboards, Si4713 and PCM5102 on the left board](assets/bench-2026-09-27.jpg)
 
 ## 1. ESP32-S3-N16R8 devkit
 
@@ -133,28 +133,27 @@ Si4713 ~20 mA transmitting, INMP441 ~1.5 mA. Under 1 A at 5 V with headroom.
 
 ## Pin allocation
 
-Avoids the reserved pins above and keeps all signals on the right-hand header row. The
-step-by-step for the bench is `wiring.md`.
+The modules sit on the **left** breadboard next to the devkit's left header row, so the signals
+come from that row and every wire stays on one board. Only +5 V crosses the devkit, because
+the `5Vin` pin is on the right row. GPIO39–42 are the JTAG pins; this devkit debugs over USB
+Serial/JTAG, so they are free. GPIO48 drives the RGB LED and is avoided. The step-by-step for
+the bench is `wiring.md`.
 
 | Function | ESP32-S3 GPIO | Module pin |
 |----------|---------------|------------|
-| I2S0 TX bit clock | 12 | PCM5102 BCK |
-| I2S0 TX word select | 11 | PCM5102 LCK |
-| I2S0 TX data | 10 | PCM5102 DIN |
-| — | GND | PCM5102 SCK |
-| I2S1 RX bit clock | 16 | INMP441 SCK |
-| I2S1 RX word select | 17 | INMP441 WS |
-| I2S1 RX data | 18 | INMP441 SD |
-| — | GND | INMP441 L/R |
-| I2C SDA | 8 | Si4713 SDA |
-| I2C SCL | 9 | Si4713 SCL |
-| Si4713 reset | 4 | Si4713 RST |
-| — | 3V3 | Si4713 CS (address 0x63) |
-| Audio | PCM5102 L/R/G line out | Si4713 LIN/RIN/GND |
+| Si4713 reset | 38 | Si4713 `RST` |
+| I2C SCL | 39 | Si4713 `SCL` |
+| I2C SDA | 40 | Si4713 `SDA` |
+| I2S TX bit clock | 41 | PCM5102 `BCK` |
+| I2S TX word select | 42 | PCM5102 `LCK` |
+| I2S TX data | 2 | PCM5102 `DIN` |
+| — | GND | PCM5102 `SCK` |
+| — | open | Si4713 `CS` (address 0x63) |
+| Audio | PCM5102 jack | Si4713 jack, 3.5 mm aux cable |
 
-Power: buck set to 5.0 V → ESP32 5Vin, PCM5102 VIN, Si4713 VIN. INMP441 VDD from the
-ESP32's 3V3 pin. One common ground; keep the microphone's ground wire short and away from
-the buck.
+Power: `5Vin` (right header) → left board `+` rail → PCM5102 `VIN`, Si4713 `VIN`. Bottom `GND`
+of the left header → left board `−` rail → both module `GND` pins and PCM5102 `SCK`. The
+devkit's `3V3` stays unconnected until the microphone (step 4).
 
 ## Photos
 

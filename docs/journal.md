@@ -42,3 +42,15 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
   (PipeWire RAOP sink covers it). Bench diagram published as a private Artifact page for the
   owner; `wiring.md` corrected to match it (module headers in column `f`, wires in `g–j`,
   3V3 left unconnected until the microphone, whip antenna moved off the board).
+
+## 2026-09-27 — bench photographed, wiring redone around it
+
+- Owner placed both modules on the **left** breadboard, column `j`: Si4713 rows 30–40, PCM5102
+  rows 58–63, aux cable already between the jacks. The previous plan (right board, right
+  header) was thrown away rather than asking to move the boards.
+- New pin allocation from the left header: RST 38, SCL 39, SDA 40, BCK 41, LCK 42, DIN 2;
+  ground from the bottom GND of the left header; only +5 V crosses the devkit. GPIO39–42 are
+  JTAG pins, free because the devkit debugs over USB Serial/JTAG; GPIO48 is the RGB LED.
+- Convention for the bench: signals in column `i`, power in column `f`, so a hole name like
+  `i13 → i30` is a complete instruction.
+- Bench photo committed (no hands in frame).
