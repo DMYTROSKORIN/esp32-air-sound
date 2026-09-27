@@ -28,3 +28,12 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
   ("recent account payments have failed or your spending limit needs to be increased").
   Until the repository is public, `tools/check-private.sh` is the gate; it runs the same
   gitleaks version as the workflow, through podman when the binary is not installed.
+
+## 2026-09-27 — the picture is settled, wiring written
+
+- Owner settled the design: a Wi-Fi audio output visible from iOS, macOS and Fedora, broadcast
+  on FM in stereo with RDS track info, frequency set from the smartest-home remote, microphone
+  only for next/stop/play and not in the MVP. Regulatory side out of scope.
+- Protocol: AirPlay/RAOP, reasons in `roadmap.md`. Steps 0–5 there.
+- `wiring.md`: the first assembly, USB-powered, 14 jumpers, one aux cable, one solder joint
+  (antenna), with the two meter checks that decide whether it makes a sound.

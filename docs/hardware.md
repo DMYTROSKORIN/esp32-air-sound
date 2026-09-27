@@ -14,10 +14,9 @@ are rejected, with the reason.
 | 4 | INMP441 round module | Omnidirectional I2S MEMS microphone | Audio in |
 | 5 | LM2596S-ADJ buck module with 3-digit voltmeter | Adjustable step-down, 4–40 V in | Powers the bench from one supply |
 
-Nothing in this list amplifies or drives a speaker, which is what makes the FM-transmitter
-reading of the project the likely one: the ESP32 receives or produces audio, the DAC turns it
-into a line-level signal, the Si4713 puts it on the air, and every FM radio in the flat is a
-speaker. The microphone is the open question, see below.
+Nothing in this list amplifies or drives a speaker, and that is the point: the ESP32 is an
+AirPlay receiver, the DAC turns the stream into a line-level signal, the Si4713 puts it on the
+air in stereo with RDS, and every FM radio in the flat is a speaker. See `roadmap.md`.
 
 ![ESP32-S3-N16R8 devkit straddling two breadboards](assets/esp32-s3-devkit-breadboard.jpg)
 
@@ -99,13 +98,6 @@ an on-board 3.0 V LDO (3Vo pin) and a single **Ant** pad for a wire antenna. VIN
   ~100 MHz is about 75 cm; the Adafruit guide uses a ~1 m wire.
 - GP1/GP2 are spare GPIOs of the chip; the chip also has an RDS/ASQ interrupt.
 
-**Regulatory note, recorded so it is not forgotten.** In the EU, licence-free FM transmission in
-87.5–108 MHz is limited to 50 nW e.r.p. (ERC/REC 70-03, Annex 13). Even the Si4713's minimum
-setting with a real antenna is above that, and the Adafruit board is sold as a development
-tool, not a certified transmitter. Whatever the project becomes, the transmit power should
-stay at the minimum that reaches the radios in the flat, the antenna as short as works, and
-the frequency an empty one. Where this project runs is not in the repository.
-
 ## 4. INMP441 — I2S microphone
 
 Round black module, ~10 mm, bottom-port MEMS (the hole in the centre of the board is the
@@ -118,9 +110,8 @@ capacitor and a 10 Ω (printed 010) series resistor on VDD.
 - On the ESP32 it reads as 32-bit slots with 24 valid bits, left-aligned; sign-extend from
   bit 31 and shift, do not treat it as 32-bit audio.
 
-Why a microphone is here is not settled. Candidates: an intercom/announcement path (speak
-into the ESP32, hear it on the radios), a room-level meter that ducks the broadcast, wake-word
-control, or plain bench characterisation of the room. Decide in `decisions.md`.
+The microphone is for spoken commands only: next track, stop, play. It is not part of the MVP
+(step 4 in `roadmap.md`), and nothing it hears leaves the device.
 
 ## 5. LM2596S-ADJ buck module with voltmeter
 
@@ -140,11 +131,10 @@ between IN and OUT voltage.
 Power budget from the datasheets: ESP32-S3 with Wi-Fi peaks around 500 mA, PCM5102A ~20 mA,
 Si4713 ~20 mA transmitting, INMP441 ~1.5 mA. Under 1 A at 5 V with headroom.
 
-## Draft wiring (not yet wired)
+## Pin allocation
 
-A first allocation that avoids the reserved pins above and keeps the two I2S buses and the
-I2C bus in separate regions of the header. Change it freely; when it is wired, this table
-becomes the truth and gets its own commit.
+Avoids the reserved pins above and keeps all signals on the right-hand header row. The
+step-by-step for the bench is `wiring.md`.
 
 | Function | ESP32-S3 GPIO | Module pin |
 |----------|---------------|------------|
