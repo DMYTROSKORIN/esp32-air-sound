@@ -71,15 +71,16 @@ static void render(void)
         set_rgb(0, 0, (uint8_t)(lvl * 38.0f));
         break;
     }
-    case LED_ONLINE:
+    case LED_ONLINE: {
+        // One soft green flash every thirty seconds: on the network, on air, nobody streaming.
+        uint8_t g = burst(el % 30000, 0, 1, 120, 0, 40, 20);
+        set_rgb(0, g, 0);
+        break;
+    }
     case LED_STREAMING: {
-        const uint32_t cycle = 3600;
-        uint32_t ph = el % cycle;
-        uint8_t g = burst(ph, 0, 2, 100, 100, 40, 20);
-        uint8_t v = s_state == LED_STREAMING ? 1 : 0;
-        uint8_t vr = burst(ph, 2600, v, 150, 150, 50, 20);
-        uint8_t vb = burst(ph, 2600, v, 150, 150, 70, 20);
-        set_rgb(vr, g, vb);
+        // One violet flash every ten seconds while a phone or laptop streams to us.
+        uint32_t ph = el % 10000;
+        set_rgb(burst(ph, 0, 1, 150, 0, 50, 20), 0, burst(ph, 0, 1, 150, 0, 70, 20));
         break;
     }
     case LED_FAULT:

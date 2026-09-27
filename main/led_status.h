@@ -6,8 +6,8 @@
 //   amber blink           BOOT held; faster once the hold passes 5 s (10 s = factory reset)
 //   fast red 1.5 s        factory reset accepted, rebooting
 //   smooth blue breathing connecting to Wi-Fi
-//   two green flashes     on the network, transmitter on air, nobody streaming
-//   two green + one violet  a phone/laptop is streaming to us
+//   one green flash / 30 s  on the network, transmitter on air, nobody streaming
+//   one violet flash / 10 s a phone/laptop is streaming to us
 //   fast red blinking     transmitter not answering (I2C), or no Wi-Fi for too long
 //
 // Flash edges are softened over ~20 ms; alerts (red, amber) stay hard-edged on purpose.
