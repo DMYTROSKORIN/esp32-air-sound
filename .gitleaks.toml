@@ -33,6 +33,14 @@ description = "Personal e-mail address (only the committer identity is allowed)"
 regex = '''[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'''
 [rules.allowlist]
 regexes = ['''dev@skorin\.online''', '''noreply@github\.com''', '''example\.(com|org|net)''']
+# Third-party sources keep their authors' licence headers, addresses included; that is the licence.
+paths = ['''^components/raop/(raop|rtp|util|platform|dmap_parser)\.[ch]$''']
 
-[allowlist]
+[[allowlists]]
 paths = ['''\.gitleaks\.toml$''', '''^tools/check-private\.sh$''']
+
+# The RSA key in raop.c is Apple's AirPort Express key, public since 2011 (shairport): it is the
+# protocol itself, not a secret of this project.
+[[allowlists]]
+targetRules = ["private-key"]
+paths = ['''^components/raop/raop\.c$''']
