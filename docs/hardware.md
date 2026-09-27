@@ -74,9 +74,11 @@ not needed for this DAC.
 | H3L | XSMT | **muted** | unmuted | H |
 | H4L | FMT | I2S | left-justified | L |
 
-The four positions are populated on this board, but which side each blob sits on cannot be
-read from the photo. **Verify all four with a meter before the first power-up**; H3L on the
-L side is the classic reason a brand-new GY-PCM5102 "does not work".
+On this batch **none of the four positions is populated**: the pads are bare. FLT, DEMP and
+FMT floating give normal filter, no de-emphasis and I2S, which is what we want. XSMT floating
+reads 0.2 V and holds the DAC in hardware mute, which is exactly what happened on the bench.
+One solder blob on `H3L`, middle pad to `H`, fixes it. Quick check without pulling the board:
+the top-side holes `1 2 3 4` next to `SCK` are the same nets; hole `3` must read ~3.3 V.
 
 Other things seen on the board: a 22 Ω series resistor on DIN (printed 220), the usual output
 RC filter (470 Ω, 2.2 nF class) near the jack.

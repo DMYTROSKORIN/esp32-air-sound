@@ -3,7 +3,7 @@ menu "esp32-air-sound"
     config AIRSOUND_FREQ_10KHZ
         int "FM frequency, in 10 kHz units (10000 = 100.00 MHz)"
         range 7600 10800
-        default 10000
+        default 7650
         help
             Pick a frequency with nothing on it. 76.00 to 108.00 MHz in 50 kHz steps,
             so the value must be a multiple of 5.
@@ -37,7 +37,7 @@ menu "esp32-air-sound"
     config AIRSOUND_TONE_DB
         int "Test tone level, dB below full scale (positive number)"
         range 0 60
-        default 14
+        default 20
         help
             The PCM5102 puts out 2.1 Vrms at full scale, the Si4713 line input clips at
             636 mVpk. 14 dB down keeps the transmitter's limiter out of the picture.

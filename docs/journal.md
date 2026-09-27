@@ -84,3 +84,17 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
   105 dBuV, antenna cap 54 (13.5 pF), RDS PS loaded. The module's red LED lit for the first
   time (it is a power LED). Audio input still reads −69 dBfs: the DAC-to-transmitter path is
   the next thing to check.
+
+## 2026-09-27 — first sound on the air
+
+- Carrier confirmed on a receiver 10 cm from the board, no antenna yet. Moved to 76.50 MHz
+  (100.0 was taken); the Si4713 retuned its antenna cap from 54 to ~99 on its own.
+- Transmitter input stayed at −65 dBfs with the DAC clocked and powered (BCK/LCK 1.6 V DC,
+  DIN 0.8 V, VIN 3.3 V). Meter on the top-side hole `3` (XSMT) of the PCM5102: 0.2 V. Photo
+  of the back: **none of the four solder jumpers is populated on this batch**, so XSMT floats
+  low and the DAC is hardware-muted. FLT/DEMP/FMT floating give the wanted defaults.
+- Fix: one solder blob on `H3L`, middle pad to `H`. Tone came through at once: receiver
+  beeps, transmitter reports −2 dBfs OVERMOD with the bench settings (tone −1 dBFS, line
+  input at 190 mV). Restored to line input 3 (636 mVpk) and tone −20 dBFS: −12 dBfs, clean.
+- Step 1 is done: I2C finds the chip, DAC plays, transmitter carries it with RDS loaded.
+  Not yet seen: `AIRSOUND` on the receiver display, which needs the antenna wire.

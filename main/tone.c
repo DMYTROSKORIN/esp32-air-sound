@@ -15,16 +15,23 @@ static const char *TAG = "tone";
 
 static i2s_chan_handle_t s_tx;
 static int16_t s_buf[FRAMES_PER_BUF * 2];
+static int16_t s_silence[FRAMES_PER_BUF * 2];
+
+// 500 ms of tone, 500 ms of silence: a pattern no station and no noise will imitate.
+#define BEEP_BUFS 50
 
 static void tone_task(void *arg)
 {
+    int n = 0;
     for (;;) {
+        const int16_t *src = ((n / BEEP_BUFS) & 1) ? s_silence : s_buf;
         size_t written = 0;
-        esp_err_t err = i2s_channel_write(s_tx, s_buf, sizeof s_buf, &written, portMAX_DELAY);
+        esp_err_t err = i2s_channel_write(s_tx, src, sizeof s_buf, &written, portMAX_DELAY);
         if (err != ESP_OK) {
             ESP_LOGE(TAG, "write: %s", esp_err_to_name(err));
             vTaskDelay(pdMS_TO_TICKS(100));
         }
+        n++;
     }
 }
 
@@ -60,7 +67,7 @@ esp_err_t tone_start(int bck_gpio, int lrck_gpio, int dout_gpio, int tone_hz, in
     ESP_RETURN_ON_ERROR(i2s_channel_enable(s_tx), TAG, "enable");
 
     if (xTaskCreate(tone_task, "tone", 3072, NULL, 5, NULL) != pdPASS) return ESP_ERR_NO_MEM;
-    ESP_LOGI(TAG, "%d Hz at -%d dBFS, 44.1 kHz/16-bit stereo on BCK=%d LRCK=%d DOUT=%d",
+    ESP_LOGI(TAG, "%d Hz at -%d dBFS, 0.5 s on / 0.5 s off, 44.1 kHz/16-bit stereo on BCK=%d LRCK=%d DOUT=%d",
              tone_hz, level_db, bck_gpio, lrck_gpio, dout_gpio);
     return ESP_OK;
 }

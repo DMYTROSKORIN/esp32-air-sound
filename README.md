@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-  <a href="CHANGELOG.md"><img alt="Version" src="https://img.shields.io/badge/version-v0.0.1-2ea44f.svg"></a>
+  <a href="CHANGELOG.md"><img alt="Version" src="https://img.shields.io/badge/firmware-v0.1.0-2ea44f.svg"></a>
   <a href=".github/workflows/privacy.yml"><img alt="Privacy scan" src="https://img.shields.io/github/actions/workflow/status/DMYTROSKORIN/esp32-air-sound/privacy.yml?branch=main&label=privacy%20scan"></a>
   <img alt="MCU" src="https://img.shields.io/badge/mcu-ESP32-e7352c.svg">
   <img alt="Status" src="https://img.shields.io/badge/status-R%26D-orange.svg">
@@ -16,6 +16,10 @@
 > [!CAUTION]
 > Early R&D. Nothing here is a product yet. Expect the hardware list, the architecture and
 > the firmware to change as the bench answers questions.
+
+Where it stands: the bench transmits. Firmware 0.1.0 finds the Si4713, plays a test tone
+through the PCM5102 and puts it on 76.50 MHz with RDS; a receiver next to the board beeps.
+Next is the AirPlay receiver (`docs/roadmap.md`, step 2).
 
 ## What is this?
 
