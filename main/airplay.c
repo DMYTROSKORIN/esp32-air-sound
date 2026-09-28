@@ -185,6 +185,15 @@ void airplay_start(void)
     else as_logf("airplay: failed to start");
 }
 
+void airplay_stop(void)
+{
+    if (!s_raop) return;
+    raop_delete(s_raop);
+    s_raop = NULL;
+    set_streaming(false);
+    as_logf("airplay: stopped");
+}
+
 bool airplay_streaming(void) { return s_streaming; }
 
 void airplay_toggle(void) { if (s_raop) raop_cmd(s_raop, RAOP_TOGGLE, NULL); }

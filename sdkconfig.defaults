@@ -51,3 +51,7 @@ CONFIG_FREERTOS_RUN_TIME_STATS_USING_ESP_TIMER=y
 
 # The RAOP tasks keep their stacks inside contexts that live in PSRAM.
 CONFIG_SPIRAM_ALLOW_STACK_EXTERNAL_MEMORY=y
+
+# Sockets: the AirPlay receiver, mDNS, the captive DNS and a phone opening several connections
+# to the setup page ran the default 10 dry (httpd "error in accept (23)").
+CONFIG_LWIP_MAX_SOCKETS=24

@@ -117,6 +117,7 @@ static void button_cb(button_event_t ev)
         as_logf("button: 5 s hold, opening the setup portal");
         s_setup_mode = true;
         update_led();
+        airplay_stop();
         as_net_start_provisioning();
         break;
     case BUTTON_RESET:

@@ -172,3 +172,8 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
 - Owner asked whether the frequency can be changed from a web page. It can, on the setup page
   (BOOT 5 s), with a restart; a LAN page without restart is now on the "possible later" list in
   `roadmap.md`, not scheduled. The owner will try the setup page himself.
+- Owner tried the setup page from the phone: it opened, then threw him out, and the board stayed
+  in setup mode. Log: the moment the phone joined, httpd logged "error in accept (23)", ENFILE,
+  the socket table (default 10) was full: the AirPlay receiver's sockets, mDNS, the captive DNS,
+  and iOS opening several connections at once. Fix: 24 sockets, and the AirPlay receiver is
+  stopped for the duration of setup mode.
