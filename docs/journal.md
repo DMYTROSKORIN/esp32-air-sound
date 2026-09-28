@@ -169,3 +169,6 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
 - Released 0.2.0 with the first signed image.
 - Owner asked what the missing divider costs. Answer with numbers in `audio-levels.md`: nothing
   audible over FM; the divider is for noise margin on the cable and goes in with the enclosure.
+- Owner asked whether the frequency can be changed from a web page. It can, on the setup page
+  (BOOT 5 s), with a restart; a LAN page without restart is now on the "possible later" list in
+  `roadmap.md`, not scheduled. The owner will try the setup page himself.
