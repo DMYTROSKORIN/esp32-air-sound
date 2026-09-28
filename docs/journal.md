@@ -177,3 +177,8 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
   the socket table (default 10) was full: the AirPlay receiver's sockets, mDNS, the captive DNS,
   and iOS opening several connections at once. Fix: 24 sockets, and the AirPlay receiver is
   stopped for the duration of setup mode.
+- Second try of the setup page from the phone: joined the owner's network with the setup AP
+  still up, saved 76.60 MHz, restarted, on air at 76.60 with the name in RDS; an AirPlay session
+  followed. The portal path is verified end to end. Note in the same log: the daily release
+  check answers "HTTP 404" while the repository is private (GitHub's API hides it without a
+  token); expected until publication.
