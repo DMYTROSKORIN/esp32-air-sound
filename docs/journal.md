@@ -182,3 +182,6 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
   followed. The portal path is verified end to end. Note in the same log: the daily release
   check answers "HTTP 404" while the repository is private (GitHub's API hides it without a
   token); expected until publication.
+- Owner's framing for publication: a DIY project, with a plain legal notice in the README that
+  FM transmission needs a licence even on a free frequency, that the project is creative and
+  educational only and not for commercial broadcasting. README rewritten accordingly.
