@@ -167,3 +167,5 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
   pre-emphasised peaks into its limiter (OVERMOD in the log). Trim 18 dB; the resistor divider
   in the aux path will give this headroom back to the DAC.
 - Released 0.2.0 with the first signed image.
+- Owner asked what the missing divider costs. Answer with numbers in `audio-levels.md`: nothing
+  audible over FM; the divider is for noise margin on the cable and goes in with the enclosure.

@@ -96,6 +96,8 @@ an on-board 3.0 V LDO (3Vo pin) and a single **Ant** pad for a wire antenna. VIN
 - 76–108 MHz, stereo, RDS/RBDS, pre-emphasis 50 µs (Europe) or 75 µs, audio input at line
   level (nominal 190 mVpk into LIN/RIN; the DAC's 2.1 Vrms is far above that, so either a
   divider or the DAC's digital volume is needed).
+- Line input versus the DAC's 2.1 Vrms: see `audio-levels.md` for why the firmware trims 18 dB
+  today and what the resistor divider will change.
 - Output power register 88–115 dBµV, plus antenna tuning capacitor. A quarter-wave wire for
   ~100 MHz is about 75 cm; the Adafruit guide uses a ~1 m wire.
 - GP1/GP2 are spare GPIOs of the chip; the chip also has an RDS/ASQ interrupt.

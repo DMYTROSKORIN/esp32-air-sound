@@ -19,3 +19,4 @@ marked, so the path is visible.
 | 2026-09-28 | RTP packets up to 2048 bytes; frames handed to the output ring half the latency ahead; 100 ms prefill. | Uncompressed ALAC from PipeWire is 1424 bytes a packet and arrives close to real time; measured zero jumps and zero underruns after the change. |
 | 2026-09-28 | Digital trim 18 dB until the resistor divider exists. | 4 dB of headroom under the Si4713 limiter with pre-emphasis; the divider will move this attenuation into the analog domain. |
 | 2026-09-28 | Default station name `Air-Sound`, RDS `AirSound`. | Owner's choice; the earlier name was an example. |
+| 2026-09-28 | The resistor divider in the aux path is postponed to the enclosure build; the 18 dB digital trim stays until then. | Not audible over FM (the DAC keeps ~94 dB, the air carries ~60); the divider's real gain is noise margin on the cable, which matters once the wiring is final. Numbers in `audio-levels.md`. |

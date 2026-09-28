@@ -43,6 +43,7 @@ bench work is done.
 - `docs/roadmap.md` — the whole picture, the protocol choice, and the steps to get there.
 - `docs/senders.md` — how to play to it from iOS, macOS, Linux and Windows, and the rules for several senders.
 - `docs/mqtt.md` — draft contract for the smartest-home remote (step 3), for the owner to review.
+- `docs/audio-levels.md` — DAC versus transmitter input levels, what the digital trim costs (nothing audible) and the divider for later.
 - `tools/check-private.sh` — the privacy scan that runs locally and in CI.
 - `CLAUDE.md` — working rules for the repository, including what must never be committed.
 
