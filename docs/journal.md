@@ -185,3 +185,11 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
 - Owner's framing for publication: a DIY project, with a plain legal notice in the README that
   FM transmission needs a licence even on a free frequency, that the project is creative and
   educational only and not for commercial broadcasting. README rewritten accordingly.
+
+## 2026-09-28 — public
+
+- Owner's listening verdict: sound is fine as far as a portable receiver can tell. The repository
+  was audited across its whole history (network names, passwords, addresses, MAC addresses, other
+  people's names, e-mail) and the only trace, the example station name from the first day, was
+  rewritten out of the history with the owner's approval. README carries the parts list, the wiring
+  table and the legal notice. Made public; the on-device release check now sees the releases.
