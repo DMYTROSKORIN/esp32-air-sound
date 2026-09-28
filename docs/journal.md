@@ -124,11 +124,11 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
   and read the config cookie backwards until `TARGET_RT_LITTLE_ENDIAN` was defined; and a flash
   I started in the background while another process opened the port left a half-written image
   ("invalid segment length") — flash from the foreground, alone on the port.
-- Result: `Air-Sound` appears as an AirPlay output on Fedora (PipeWire's RAOP discover module);
+- Result: `Air-Sound` (then still under its example name) appears as an AirPlay output on Fedora (PipeWire's RAOP discover module);
   a test tone streamed for 28 s, the transmitter reported −20 dBfs at its input while it
   played and −63 dBfs afterwards. iOS and macOS, and the track title in RDS, still to be
   tried by the owner.
-- iOS confirmed by the owner: an iPhone picked `Air-Sound` from its AirPlay list, the music came
+- iOS confirmed by the owner: an iPhone picked `Air-Sound` (then still under its example name) from its AirPlay list, the music came
   out of the radio on 76.5 and the D-808 showed the track as RDS radiotext. The board's log
   during the session: RECORD, volume −20 dB from the phone, metadata and artwork, DACP remote
   found, input at the transmitter −24…−34 dBfs with no overmodulation, ring about 190 ms.
@@ -136,7 +136,7 @@ Dated log of the work. Newest entry last. Placeholders instead of real addresses
 - LED pattern changed at the owner's request: one green flash every 30 s when idle, one violet
   flash every 10 s while a stream plays.
 - Fedora: PipeWire's `libpipewire-module-raop-discover` lists the station as an output device
-  called `Air-Sound` (in the full device list, not the quick switcher); it is now loaded from
+  called `Air-Sound` (then still under its example name) (in the full device list, not the quick switcher); it is now loaded from
   `~/.config/pipewire/pipewire.conf.d/` so it survives a restart.
 - Still to check by ear tomorrow: stereo, distortion at full phone volume (whether the resistor
   divider is needed now), dropouts.

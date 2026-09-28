@@ -50,16 +50,59 @@ commercial broadcasting, for rebroadcasting content you have no rights to, or fo
 transmission that reaches beyond your own premises. The author publishes it as documentation of
 a hobby build and accepts no liability for how it is used.
 
+## Parts
+
+Everything on the bench, and what each part does. Details, part numbers and the pins that are
+off-limits on the devkit are in `docs/hardware.md`.
+
+| Part | What it is | Role |
+|------|------------|------|
+| ESP32-S3-N16R8 devkit (44-pin, dual USB-C, WS2812 LED) | 16 MB flash, 8 MB PSRAM, Wi-Fi | Runs everything: AirPlay receiver, I2S out, I2C control, setup page, OTA |
+| GY-PCM5102 (TI PCM5102A) | 32-bit I2S DAC, line out, no MCLK needed | Turns the stream into a line-level signal |
+| CJMCU-4713 (Silicon Labs Si4713) | FM stereo transmitter with RDS, I2C | Puts the audio on the FM band; RDS carries the station name and the track |
+| INMP441 | I2S MEMS microphone | Not wired yet: spoken next/stop/play is step 4 |
+| LM2596 buck module | Adjustable step-down, 4–40 V in | Not wired yet: stand-alone 5 V supply is step 5 |
+| 3.5 mm aux cable | | DAC output to transmitter input |
+| ~75 cm of wire | | Antenna, in the `Ant` hole of the Si4713 |
+
+No amplifier and no speaker: every FM radio in range is the speaker.
+
+## How it is wired
+
+The modules sit on a breadboard next to the devkit's left header; only power crosses the board.
+Step-by-step with breadboard coordinates, the two meter checks and the mistakes already made:
+`docs/wiring.md`.
+
+| Signal | ESP32-S3 GPIO | Module pin |
+|--------|---------------|------------|
+| I2C SCL | 39 | Si4713 `SCL` |
+| I2C SDA | 40 | Si4713 `SDA` |
+| Transmitter reset | 38 | Si4713 `RST` |
+| I2S bit clock | 41 | PCM5102 `BCK` |
+| I2S word select | 42 | PCM5102 `LCK` |
+| I2S data | 2 | PCM5102 `DIN` |
+| 3.3 V | `3V3` | PCM5102 `VIN`, Si4713 `VIN` (both regulate on board) |
+| Ground | `GND` | PCM5102 `GND`, PCM5102 `SCK` (no master clock: tie it low), Si4713 `GND` |
+| Status LED | 48 | on the devkit |
+| Button | 0 | `BOOT` on the devkit |
+| Audio | PCM5102 jack | Si4713 jack, 3.5 mm cable |
+| Antenna | | Si4713 `Ant`, ~75 cm wire |
+
+Three things that cost an evening and are worth knowing before you copy this: the devkit's `5Vin`
+pin does not carry USB power out unless its `IN-OUT` pads are bridged (hence 3.3 V for the
+modules); the PCM5102 on this batch ships with all four solder jumpers open and is muted until
+`H3L` is bridged to `H`; and the Si4713 `CS` pin stays open for I2C address `0x63`.
+
 ## Where things are
 
-- `docs/journal.md` — dated log of the work, newest entry last.
-- `docs/decisions.md` — choices that stuck and why; superseded ones stay, marked as such.
 - `docs/hardware.md` — the boards on the bench, what each one is, and the ESP32 pins that are off-limits.
 - `docs/wiring.md` — how to connect them, step by step, with the checks that matter.
-- `docs/roadmap.md` — the whole picture, the protocol choice, and the steps to get there.
-- `docs/senders.md` — how to play to it from iOS, macOS, Linux and Windows, and the rules for several senders.
-- `docs/mqtt.md` — draft contract for the smartest-home remote (step 3), for the owner to review.
 - `docs/audio-levels.md` — DAC versus transmitter input levels, what the digital trim costs (nothing audible) and the divider for later.
+- `docs/senders.md` — how to play to it from iOS, macOS, Linux and Windows, and the rules for several senders.
+- `docs/roadmap.md` — the whole picture, the protocol choice, the steps, and the ideas not scheduled.
+- `docs/mqtt.md` — draft contract for the smartest-home remote (step 3).
+- `docs/journal.md` — dated log of the work, newest entry last.
+- `docs/decisions.md` — choices that stuck and why; superseded ones stay, marked as such.
 - `tools/check-private.sh` — the privacy scan that runs locally and in CI.
 - `CLAUDE.md` — working rules for the repository, including what must never be committed.
 
